@@ -1,4 +1,4 @@
-from machine import Pin, Timer
+from machine import Pin, Timer, UART
 import time
 
 led_onboard = Pin("LED", Pin.OUT)
@@ -10,17 +10,7 @@ led5 = Pin(14, Pin.OUT)
 led6 = Pin(17, Pin.OUT)
 led7 = Pin(6, Pin.OUT)
 led8 = Pin(19, Pin.OUT)
-
-gp7 = Pin(7, Pin.OUT)
-gp8 = Pin(8, Pin.OUT)
-gp10 = Pin(10, Pin.OUT)
-gp12 = Pin(12, Pin.OUT)
-gp13 = Pin(13, Pin.OUT)
-gp15 = Pin(15, Pin.OUT)
-gp16 = Pin(16, Pin.OUT)
-gp18 = Pin(18, Pin.OUT)
-gp21 = Pin(21, Pin.OUT)
-gp22 = Pin(22, Pin.OUT)
+heat_pad = Pin(21, Pin.OUT)
 
 def reset():
     led1.value(0)
@@ -33,27 +23,24 @@ def reset():
     led8.value(0)
     
 def allBlink():
-    led1.toggle()
-    led2.toggle()
-    led3.toggle()
-    led4.toggle()
-    led5.toggle()
-    led6.toggle()
-    led7.toggle()
-    led8.toggle()
-    
-    gp7.toggle()
-    gp8.toggle()
-    gp10.toggle()
-    gp12.toggle()
-    gp13.toggle()
-    gp15.toggle()
-    gp16.toggle()
-    gp18.toggle()
-    gp21.toggle()
-    gp22.toggle()
-    time.sleep(0.75)
-    
+    led1.value(0)
+    led2.value(0)
+    led3.value(0)
+    led4.value(0)
+    led5.value(0)
+    led6.value(0)
+    led7.value(0)
+    led8.value(0)
+    time.sleep(1)
+    led1.value(1)
+    led2.value(1)
+    led3.value(1)
+    led4.value(1)
+    led5.value(1)
+    led6.value(1)
+    led7.value(1)
+    led8.value(1)
+    time.sleep(1)
     
 def happy(delay):
     for i in range(2):
@@ -218,6 +205,39 @@ def disgust(delay):
         led2.value(0)
     
     
-reset()
-while(True):
-    allBlink()
+uart = UART(0, 9600)
+led_onboard = Pin(22, Pin.OUT)
+led_onboard.value(1)
+
+command = b'x'
+while True:
+    # print('checking BT')  
+    if uart.any():
+        heat_pad.value(1)
+        new_command = uart.readline()
+        print(new_command)
+        command = new_command
+    else:
+        #heat_pad.value(0)
+        continue
+        
+    if command==b'0':
+        happy(0.4)  
+    elif command==b'1':
+        sad(0.2)
+    elif command==b'2':
+        surprise(0.6)
+    elif command==b'3':
+        nervous(0.4)
+    elif command==b'4':
+        fear(0.3)
+    elif command==b'5':
+        excitement(0.8)
+    elif command==b'6':
+        anger(0.3)
+    elif command==b'7':
+        disgust(0.2)
+    
+    
+        
+

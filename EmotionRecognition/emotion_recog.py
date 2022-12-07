@@ -4,7 +4,7 @@ import cv2
 
 # --- 1. Capture the image ---
 # initialize the camera
-cam_port = 0
+cam_port = 1
 cam = cv2.VideoCapture(cam_port)
 
 # reading the input using the camera
@@ -12,8 +12,6 @@ result, image = cam.read()
 
 # If image will detected without any error, show result
 if result:
-	# OFF - showing result, it take frame name and image output
-	# imshow("GeeksForGeeks", image)
 
 	# saving image in local storage
 	cv2.imwrite("content/image_out.jpg", image)
@@ -41,6 +39,8 @@ captured_emotions = emo_detector.detect_emotions(image_in)
 
 # Use the top_emotion() function to find the dominant emotion in the image
 dominant_emotion, emotion_score = emo_detector.top_emotion(image_in)
+print("\n\n")
 print(dominant_emotion, emotion_score)
+print("\n\n")
 
 #-----------------------
